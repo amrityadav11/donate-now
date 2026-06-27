@@ -1,12 +1,116 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { homepageService } from '../services/homepageService';
 import { campaignService } from '../services/campaignService';
 import { categoryService } from '../services/categoryService';
-import { FiArrowRight, FiChevronRight } from 'react-icons/fi';
+import { FiArrowRight, FiChevronRight, FiChevronLeft } from 'react-icons/fi';
 import CampaignCard from '../components/CampaignCard';
 import Loading from '../components/Loading';
 import SEO from '../components/SEO';
+
+/* ── Banner Slider ───────────────────────────────────────────────────────── */
+const BannerSlider = ({ slides }) => {
+    const active = slides.filter(s => s.isActive);
+    const [current, setCurrent] = useState(0);
+    const timerRef = useRef(null);
+
+    const next = useCallback(() => setCurrent(i => (i + 1) % active.length), [active.length]);
+    const prev = () => setCurrent(i => (i - 1 + active.length) % active.length);
+
+    useEffect(() => {
+        if (active.length <= 1) return;
+        timerRef.current = setInterval(next, 4500);
+        return () => clearInterval(timerRef.current);
+    }, [next, active.length]);
+
+    if (!active.length) return null;
+
+    return (
+        <div className="relative bg-[#fdf6ee] overflow-hidden">
+            {/* Track */}
+            <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${current * 100}%)` }}
+            >
+                {active.map((slide, i) => (
+                    <div key={slide._id || i} className="min-w-full flex items-stretch">
+                        <div className="flex w-full min-h-[160px] sm:min-h-[200px]">
+                            {/* Left image */}
+                            {slide.image?.url && (
+                                <div className="hidden sm:block w-48 lg:w-60 flex-shrink-0 overflow-hidden">
+                                    <img src={slide.image.url} alt={slide.title} className="w-full h-full object-cover" />
+                                </div>
+                            )}
+
+                            {/* Text */}
+                            <div className="flex-1 flex flex-col justify-center px-8 sm:px-10 py-6">
+                                <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white leading-tight mb-1">
+                                    {slide.title?.split(',').map((part, pi) =>
+                                        pi === 0
+                                            ? <span key={pi} className="text-primary-600">{part}{slide.title.includes(',') ? ',' : ''}</span>
+                                            : <span key={pi}>{part}</span>
+                                    )}
+                                </h3>
+                                {slide.subtitle && (
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{slide.subtitle}</p>
+                                )}
+                                {slide.url && (
+                                    <Link
+                                        to={slide.url}
+                                        className="inline-flex items-center gap-2 self-start bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold uppercase tracking-widest py-2.5 px-5 rounded-lg transition-colors"
+                                    >
+                                        {slide.buttonText || 'Donate Now'}
+                                    </Link>
+                                )}
+                            </div>
+
+                            {/* Right image (visible on wider screens for the "peek" effect) */}
+                            {slide.image?.url && (
+                                <div className="hidden md:block w-56 lg:w-72 flex-shrink-0 overflow-hidden">
+                                    <img src={slide.image.url} alt={slide.title} className="w-full h-full object-cover" />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Arrows */}
+            {active.length > 1 && (
+                <>
+                    <button
+                        onClick={prev}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 dark:bg-gray-800/80 rounded-full shadow flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 transition-colors z-10"
+                        aria-label="Previous slide"
+                    >
+                        <FiChevronLeft size={18} />
+                    </button>
+                    <button
+                        onClick={next}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 dark:bg-gray-800/80 rounded-full shadow flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 transition-colors z-10"
+                        aria-label="Next slide"
+                    >
+                        <FiChevronRight size={18} />
+                    </button>
+                </>
+            )}
+
+            {/* Dots */}
+            {active.length > 1 && (
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    {active.map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setCurrent(i)}
+                            className={`w-1.5 h-1.5 rounded-full transition-all ${i === current ? 'bg-primary-600 w-4' : 'bg-gray-300'}`}
+                            aria-label={`Go to slide ${i + 1}`}
+                        />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
 
 /* ── Marquee ─────────────────────────────────────────────────────────────── */
 const MARQUEE_ITEMS = [
@@ -107,6 +211,11 @@ const HomePage = () => {
                 </div>
             </section>
 
+            {/* ── Banner Slider ─────────────────────────────────────── */}
+            {homepage?.bannerSlides?.some(s => s.isActive) && (
+                <BannerSlider slides={homepage.bannerSlides} />
+            )}
+
             {/* ── Marquee ───────────────────────────────────────────────── */}
             <Marquee />
 
@@ -137,8 +246,8 @@ const HomePage = () => {
                                     key={cat._id}
                                     onClick={() => setActiveCategory(cat._id)}
                                     className={`flex-shrink-0 flex flex-col items-center gap-1.5 px-4 pt-3 pb-3 border-b-2 transition-all ${active
-                                            ? 'border-primary-600 text-primary-600'
-                                            : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                                        ? 'border-primary-600 text-primary-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                                         }`}
                                 >
                                     <span className="text-xl leading-none">{cat.icon}</span>

@@ -270,6 +270,98 @@ export const deleteTestimonial = async (req, res) => {
     }
 };
 
+// @desc    Add banner slide
+// @route   POST /api/homepage/banner-slides
+// @access  Private (Admin)
+export const addBannerSlide = async (req, res) => {
+    try {
+        let homepage = await Homepage.findOne();
+        if (!homepage) homepage = await Homepage.create({});
+
+        const { title, subtitle, url, buttonText, image } = req.body;
+
+        // Ensure the array exists (old documents may not have it)
+        if (!homepage.bannerSlides) homepage.bannerSlides = [];
+
+        const slide = {
+            title: title || '',
+            subtitle: subtitle || '',
+            url: url || '/campaigns',
+            buttonText: buttonText || 'Donate Now',
+            isActive: true,
+            order: homepage.bannerSlides.length,
+        };
+
+        if (image && image.startsWith('data:')) {
+            const result = await uploadToCloudinary(image, 'homepage/banners');
+            slide.image = { url: result.url, public_id: result.public_id };
+        }
+
+        homepage.bannerSlides.push(slide);
+        homepage.markModified('bannerSlides');
+        await homepage.save();
+
+        res.status(200).json({ success: true, message: 'Banner slide added', homepage });
+    } catch (error) {
+        console.error('addBannerSlide error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Update banner slide
+// @route   PUT /api/homepage/banner-slides/:id
+// @access  Private (Admin)
+export const updateBannerSlide = async (req, res) => {
+    try {
+        const homepage = await Homepage.findOne();
+        if (!homepage) return res.status(404).json({ success: false, message: 'Homepage not found' });
+
+        const slide = homepage.bannerSlides.id(req.params.id);
+        if (!slide) return res.status(404).json({ success: false, message: 'Slide not found' });
+
+        const { title, subtitle, url, buttonText, isActive, image } = req.body;
+        if (title !== undefined) slide.title = title;
+        if (subtitle !== undefined) slide.subtitle = subtitle;
+        if (url !== undefined) slide.url = url;
+        if (buttonText !== undefined) slide.buttonText = buttonText;
+        if (isActive !== undefined) slide.isActive = isActive;
+
+        if (image && image.startsWith('data:')) {
+            if (slide.image?.public_id) await deleteFromCloudinary(slide.image.public_id);
+            const result = await uploadToCloudinary(image, 'homepage/banners');
+            slide.image = { url: result.url, public_id: result.public_id };
+        }
+
+        homepage.markModified('bannerSlides');
+        await homepage.save();
+
+        res.status(200).json({ success: true, message: 'Banner slide updated', homepage });
+    } catch (error) {
+        console.error('updateBannerSlide error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// @desc    Delete banner slide
+// @route   DELETE /api/homepage/banner-slides/:id
+// @access  Private (Admin)
+export const deleteBannerSlide = async (req, res) => {
+    try {
+        const homepage = await Homepage.findOne();
+        if (!homepage) return res.status(404).json({ success: false, message: 'Homepage not found' });
+
+        const slide = homepage.bannerSlides.id(req.params.id);
+        if (slide?.image?.public_id) await deleteFromCloudinary(slide.image.public_id);
+
+        homepage.bannerSlides.pull(req.params.id);
+        await homepage.save();
+
+        res.status(200).json({ success: true, message: 'Banner slide deleted', homepage });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 // @desc    Update contact info
 // @route   PUT /api/homepage/contact
 // @access  Private (Admin)

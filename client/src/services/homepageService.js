@@ -48,4 +48,20 @@ export const homepageService = {
         const response = await api.put('/homepage/contact', data);
         return response.data;
     },
+
+    // Banner slides (Admin)
+    addBannerSlide: async (data) => {
+        const response = await api.post('/homepage/banner-slides', data);
+        return response.data;
+    },
+
+    updateBannerSlide: async (id, data) => {
+        const response = await api.put(`/homepage/banner-slides/${id}`, data);
+        return response.data;
+    },
+
+    deleteBannerSlide: async (id) => {
+        const response = await api.delete(`/homepage/banner-slides/${id}`);
+        return response.data;
+    },
 };

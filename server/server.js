@@ -35,18 +35,19 @@ app.use(cors({
   credentials: true,
 }));
 
-// Rate limiting
+// Rate limiting — relax the limit for admin routes
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
+  max: 500, // Increased to handle admin operations
+  message: 'Too many requests from this IP, please try again later.',
+  skip: (req) => req.path.startsWith('/admin'), // skip rate limiting for admin routes
 });
 
 app.use('/api/', limiter);
 
-// Body parser middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Body parser middleware — 20mb to handle base64 image uploads
+app.use(express.json({ limit: '20mb' }));
+app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 
 // API routes
 app.use('/api/admin', adminRoutes);

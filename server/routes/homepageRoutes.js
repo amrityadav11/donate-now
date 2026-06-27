@@ -8,6 +8,9 @@ import {
     updateTestimonial,
     deleteTestimonial,
     updateContact,
+    addBannerSlide,
+    updateBannerSlide,
+    deleteBannerSlide,
 } from '../controllers/homepageController.js';
 import { protect } from '../middleware/auth.js';
 
@@ -24,5 +27,8 @@ router.post('/testimonials', protect, addTestimonial);
 router.put('/testimonials/:id', protect, updateTestimonial);
 router.delete('/testimonials/:id', protect, deleteTestimonial);
 router.put('/contact', protect, updateContact);
+router.post('/banner-slides', protect, addBannerSlide);
+router.put('/banner-slides/:id', protect, updateBannerSlide);
+router.delete('/banner-slides/:id', protect, deleteBannerSlide);
 
 export default router;

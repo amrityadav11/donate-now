@@ -1,6 +1,18 @@
 import mongoose from 'mongoose';
 
 const homepageSchema = new mongoose.Schema({
+    bannerSlides: [{
+        title: { type: String, default: '' },
+        subtitle: { type: String, default: '' },
+        image: {
+            url: { type: String, default: '' },
+            public_id: { type: String, default: '' },
+        },
+        url: { type: String, default: '/campaigns' },
+        buttonText: { type: String, default: 'Donate Now' },
+        isActive: { type: Boolean, default: true },
+        order: { type: Number, default: 0 },
+    }],
     hero: {
         title: {
             type: String,
