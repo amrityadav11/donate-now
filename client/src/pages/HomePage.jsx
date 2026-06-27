@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { homepageService } from '../services/homepageService';
 import { campaignService } from '../services/campaignService';
 import { categoryService } from '../services/categoryService';
@@ -8,107 +8,163 @@ import CampaignCard from '../components/CampaignCard';
 import Loading from '../components/Loading';
 import SEO from '../components/SEO';
 
-/* ── Banner Slider ───────────────────────────────────────────────────────── */
-const BannerSlider = ({ slides }) => {
+/* ── Hero Slider ─────────────────────────────────────────────────────────── */
+const HeroSlider = ({ slides, fallbackHero, fallbackBg }) => {
     const active = slides.filter(s => s.isActive);
     const [current, setCurrent] = useState(0);
     const timerRef = useRef(null);
+    const touchStartX = useRef(null);
+    const navigate = useNavigate();
 
     const next = useCallback(() => setCurrent(i => (i + 1) % active.length), [active.length]);
-    const prev = () => setCurrent(i => (i - 1 + active.length) % active.length);
+    const prev = useCallback(() => setCurrent(i => (i - 1 + active.length) % active.length), [active.length]);
 
     useEffect(() => {
         if (active.length <= 1) return;
-        timerRef.current = setInterval(next, 4500);
+        timerRef.current = setInterval(next, 5000);
         return () => clearInterval(timerRef.current);
     }, [next, active.length]);
 
-    if (!active.length) return null;
+    const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+    const handleTouchEnd = (e) => {
+        if (touchStartX.current === null) return;
+        const diff = touchStartX.current - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+        touchStartX.current = null;
+    };
 
-    return (
-        <div className="relative bg-[#fdf6ee] overflow-hidden">
-            {/* Track */}
-            <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${current * 100}%)` }}
+    // No slides — render static hero
+    if (!active.length) {
+        return (
+            <section
+                className="relative flex items-center min-h-[70vh] sm:min-h-[80vh]"
+                style={fallbackBg ? { backgroundImage: `url(${fallbackBg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
             >
-                {active.map((slide, i) => (
-                    <div key={slide._id || i} className="min-w-full flex items-stretch">
-                        <div className="flex w-full min-h-[160px] sm:min-h-[200px]">
-                            {/* Left image */}
-                            {slide.image?.url && (
-                                <div className="hidden sm:block w-48 lg:w-60 flex-shrink-0 overflow-hidden">
-                                    <img src={slide.image.url} alt={slide.title} className="w-full h-full object-cover" />
-                                </div>
-                            )}
-
-                            {/* Text */}
-                            <div className="flex-1 flex flex-col justify-center px-8 sm:px-10 py-6">
-                                <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white leading-tight mb-1">
-                                    {slide.title?.split(',').map((part, pi) =>
-                                        pi === 0
-                                            ? <span key={pi} className="text-primary-600">{part}{slide.title.includes(',') ? ',' : ''}</span>
-                                            : <span key={pi}>{part}</span>
-                                    )}
-                                </h3>
-                                {slide.subtitle && (
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{slide.subtitle}</p>
-                                )}
-                                {slide.url && (
-                                    <Link
-                                        to={slide.url}
-                                        className="inline-flex items-center gap-2 self-start bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold uppercase tracking-widest py-2.5 px-5 rounded-lg transition-colors"
-                                    >
-                                        {slide.buttonText || 'Donate Now'}
-                                    </Link>
-                                )}
-                            </div>
-
-                            {/* Right image (visible on wider screens for the "peek" effect) */}
-                            {slide.image?.url && (
-                                <div className="hidden md:block w-56 lg:w-72 flex-shrink-0 overflow-hidden">
-                                    <img src={slide.image.url} alt={slide.title} className="w-full h-full object-cover" />
-                                </div>
-                            )}
+                <div className={`absolute inset-0 ${fallbackBg ? 'bg-black/55' : 'bg-gradient-to-br from-primary-700 via-primary-600 to-orange-500'}`} />
+                <div className="relative z-10 section-container w-full py-16 sm:py-24">
+                    <div className="max-w-2xl">
+                        <span className="inline-block bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-5 uppercase tracking-widest">
+                            Make a difference
+                        </span>
+                        <h1 className="heading-1 text-white mb-5 leading-[1.15]">
+                            {fallbackHero?.title || 'When Kindness Moves, The World Shifts.'}
+                        </h1>
+                        <p className="text-white/80 text-base sm:text-lg mb-8 leading-relaxed max-w-xl">
+                            {fallbackHero?.subtitle || 'Your donation can change lives. Support causes that matter to you.'}
+                        </p>
+                        <div className="flex flex-wrap gap-3">
+                            <Link to={fallbackHero?.ctaLink || '/campaigns'}
+                                className="inline-flex items-center gap-2 bg-white text-primary-700 hover:bg-primary-50 font-bold text-sm py-3 px-6 rounded-xl transition-all shadow-lg">
+                                {fallbackHero?.ctaText || 'Explore Campaigns'} <FiArrowRight size={16} />
+                            </Link>
+                            <Link to="/start-campaign"
+                                className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/30 text-white font-semibold text-sm py-3 px-6 rounded-xl transition-all">
+                                Start a Campaign
+                            </Link>
                         </div>
                     </div>
-                ))}
+                </div>
+            </section>
+        );
+    }
+
+    return (
+        <section
+            className="relative overflow-hidden min-h-[70vh] sm:min-h-[80vh]"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+        >
+            {/* Slides */}
+            <div className="flex h-full transition-transform duration-700 ease-in-out"
+                style={{ transform: `translateX(-${current * 100}%)`, minHeight: 'inherit' }}>
+                {active.map((slide, i) => {
+                    const bg = slide.image?.url;
+                    return (
+                        <div
+                            key={slide._id || i}
+                            className="relative min-w-full flex items-center min-h-[70vh] sm:min-h-[80vh] cursor-pointer select-none"
+                            style={bg ? { backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                            onClick={() => slide.url && navigate(slide.url)}
+                        >
+                            {/* Overlay */}
+                            <div className={`absolute inset-0 ${bg ? 'bg-black/55' : 'bg-gradient-to-br from-primary-700 via-primary-600 to-orange-500'}`} />
+
+                            {/* Content */}
+                            <div className="relative z-10 section-container w-full py-16 sm:py-24 pointer-events-none">
+                                <div className="max-w-2xl">
+                                    <span className="inline-block bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-5 uppercase tracking-widest">
+                                        Make a difference
+                                    </span>
+                                    <h1 className="heading-1 text-white mb-5 leading-[1.15]">
+                                        {slide.title || fallbackHero?.title || 'When Kindness Moves, The World Shifts.'}
+                                    </h1>
+                                    {slide.subtitle && (
+                                        <p className="text-white/80 text-base sm:text-lg mb-8 leading-relaxed max-w-xl">
+                                            {slide.subtitle}
+                                        </p>
+                                    )}
+                                    <div className="flex flex-wrap gap-3 pointer-events-auto">
+                                        {slide.url && (
+                                            <Link
+                                                to={slide.url}
+                                                onClick={e => e.stopPropagation()}
+                                                className="inline-flex items-center gap-2 bg-white text-primary-700 hover:bg-primary-50 font-bold text-sm py-3 px-6 rounded-xl transition-all shadow-lg"
+                                            >
+                                                {slide.buttonText || 'Donate Now'} <FiArrowRight size={16} />
+                                            </Link>
+                                        )}
+                                        <Link
+                                            to="/start-campaign"
+                                            onClick={e => e.stopPropagation()}
+                                            className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/30 text-white font-semibold text-sm py-3 px-6 rounded-xl transition-all"
+                                        >
+                                            Start a Campaign
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
 
-            {/* Arrows */}
+            {/* Prev / Next arrows */}
             {active.length > 1 && (
                 <>
-                    <button
-                        onClick={prev}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 dark:bg-gray-800/80 rounded-full shadow flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 transition-colors z-10"
-                        aria-label="Previous slide"
-                    >
-                        <FiChevronLeft size={18} />
+                    <button onClick={prev}
+                        className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+                        aria-label="Previous slide">
+                        <FiChevronLeft size={22} />
                     </button>
-                    <button
-                        onClick={next}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 dark:bg-gray-800/80 rounded-full shadow flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 transition-colors z-10"
-                        aria-label="Next slide"
-                    >
-                        <FiChevronRight size={18} />
+                    <button onClick={next}
+                        className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+                        aria-label="Next slide">
+                        <FiChevronRight size={22} />
                     </button>
                 </>
             )}
 
-            {/* Dots */}
+            {/* Dot indicators */}
             {active.length > 1 && (
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex gap-2">
                     {active.map((_, i) => (
                         <button
                             key={i}
                             onClick={() => setCurrent(i)}
-                            className={`w-1.5 h-1.5 rounded-full transition-all ${i === current ? 'bg-primary-600 w-4' : 'bg-gray-300'}`}
+                            className={`h-2 rounded-full transition-all duration-300 ${i === current ? 'bg-white w-6' : 'bg-white/50 w-2'}`}
                             aria-label={`Go to slide ${i + 1}`}
                         />
                     ))}
                 </div>
             )}
-        </div>
+
+            {/* Slide counter */}
+            {active.length > 1 && (
+                <div className="absolute bottom-5 right-5 z-20 text-white/60 text-xs font-medium tabular-nums">
+                    {current + 1} / {active.length}
+                </div>
+            )}
+        </section>
     );
 };
 
@@ -174,47 +230,12 @@ const HomePage = () => {
         <>
             <SEO />
 
-            {/* ── Hero ──────────────────────────────────────────────────── */}
-            <section
-                className="relative flex items-center min-h-[70vh] sm:min-h-[80vh]"
-                style={heroBg ? { backgroundImage: `url(${heroBg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
-            >
-                <div className={`absolute inset-0 ${heroBg ? 'bg-black/55' : 'bg-gradient-to-br from-primary-700 via-primary-600 to-orange-500'}`} />
-
-                <div className="relative z-10 section-container w-full py-16 sm:py-24">
-                    <div className="max-w-2xl">
-                        <span className="inline-block bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-5 uppercase tracking-widest">
-                            Make a difference
-                        </span>
-                        <h1 className="heading-1 text-white mb-5 leading-[1.15]">
-                            {homepage?.hero?.title || 'When Kindness Moves, The World Shifts.'}
-                        </h1>
-                        <p className="text-white/80 text-base sm:text-lg mb-8 leading-relaxed max-w-xl">
-                            {homepage?.hero?.subtitle || 'Your donation can change lives. Support causes that matter to you.'}
-                        </p>
-                        <div className="flex flex-wrap gap-3">
-                            <Link
-                                to={homepage?.hero?.ctaLink || '/campaigns'}
-                                className="inline-flex items-center gap-2 bg-white text-primary-700 hover:bg-primary-50 font-bold text-sm py-3 px-6 rounded-xl transition-all shadow-lg"
-                            >
-                                {homepage?.hero?.ctaText || 'Explore Campaigns'}
-                                <FiArrowRight size={16} />
-                            </Link>
-                            <Link
-                                to="/start-campaign"
-                                className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/30 text-white font-semibold text-sm py-3 px-6 rounded-xl transition-all"
-                            >
-                                Start a Campaign
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* ── Banner Slider ─────────────────────────────────────── */}
-            {homepage?.bannerSlides?.some(s => s.isActive) && (
-                <BannerSlider slides={homepage.bannerSlides} />
-            )}
+            {/* ── Hero Slider ───────────────────────────────────────── */}
+            <HeroSlider
+                slides={homepage?.bannerSlides || []}
+                fallbackHero={homepage?.hero}
+                fallbackBg={heroBg}
+            />
 
             {/* ── Marquee ───────────────────────────────────────────────── */}
             <Marquee />
