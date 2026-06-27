@@ -33,6 +33,7 @@ import AdminProfile from './pages/admin/AdminProfile';
 import AdminManagement from './pages/admin/AdminManagement';
 import AdminCampaignRequests from './pages/admin/AdminCampaignRequests';
 import StartCampaignPage from './pages/StartCampaignPage';
+import UserProfilePage from './pages/UserProfilePage';
 
 // Protected Route Component
 import ProtectedRoute from './components/ProtectedRoute';
@@ -66,6 +67,10 @@ function App() {
 
             {/* Start Campaign — standalone full page */}
             <Route path="/start-campaign" element={<StartCampaignPage />} />
+
+            {/* User Profile */}
+            <Route path="/profile" element={<UserProfilePage />} />
+            <Route path="/profile/saved" element={<UserProfilePage />} />
 
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLoginPage />} />

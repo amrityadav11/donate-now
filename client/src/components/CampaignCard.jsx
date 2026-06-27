@@ -1,79 +1,109 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatCurrency, calculateProgress } from '../utils/helpers';
-import { FiHeart } from 'react-icons/fi';
+import { FiHeart, FiBookmark } from 'react-icons/fi';
+import { userService } from '../services/userService';
+import toast from 'react-hot-toast';
 
 const CampaignCard = ({ campaign }) => {
     const progress = calculateProgress(campaign.raisedAmount, campaign.goalAmount);
-    const remaining = campaign.goalAmount - campaign.raisedAmount;
+    const user = userService.getCurrentUser();
+    const [saved, setSaved] = useState(
+        () => user?.savedCampaigns?.includes(campaign._id) || false
+    );
+    const [saving, setSaving] = useState(false);
+
+    const handleSave = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!userService.isLoggedIn()) {
+            toast('Login to save campaigns', { icon: '🔒' });
+            return;
+        }
+        setSaving(true);
+        try {
+            const res = await userService.toggleSaveCampaign(campaign._id);
+            setSaved(res.saved);
+            toast.success(res.saved ? 'Campaign saved!' : 'Removed from saved');
+        } catch {
+            toast.error('Could not save campaign');
+        } finally {
+            setSaving(false);
+        }
+    };
 
     return (
         <Link to={`/campaigns/${campaign.slug}`} className="card overflow-hidden group block">
             {/* Image */}
-            <div className="relative h-48 overflow-hidden">
+            <div className="relative h-44 sm:h-48 overflow-hidden">
                 <img
-                    src={campaign.coverImage?.url || campaign.images[0]?.url || '/placeholder.jpg'}
+                    src={campaign.coverImage?.url || campaign.images?.[0]?.url || '/placeholder.jpg'}
                     alt={campaign.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => { e.target.src = '/placeholder.jpg'; }}
                 />
                 {campaign.featured && (
-                    <div className="absolute top-3 right-3 bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    <div className="absolute top-2 left-2 bg-primary-600 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
                         Featured
                     </div>
                 )}
+                {/* Save button */}
+                <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className={`absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-md ${saved
+                            ? 'bg-primary-600 text-white'
+                            : 'bg-white/90 text-gray-600 hover:bg-primary-600 hover:text-white'
+                        }`}
+                    title={saved ? 'Remove from saved' : 'Save campaign'}
+                >
+                    <FiBookmark size={14} fill={saved ? 'currentColor' : 'none'} />
+                </button>
             </div>
 
             {/* Content */}
-            <div className="p-5">
+            <div className="p-4">
                 {/* Category */}
-                <div className="flex items-center gap-2 mb-3">
-                    <span className="text-2xl">{campaign.category.icon}</span>
-                    <span className="text-sm text-primary-600 font-medium">{campaign.category.name}</span>
+                <div className="flex items-center gap-1.5 mb-2">
+                    <span className="text-xl">{campaign.category?.icon}</span>
+                    <span className="text-xs text-primary-600 font-semibold uppercase tracking-wide">
+                        {campaign.category?.name}
+                    </span>
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                <h3 className="text-base font-bold mb-1.5 line-clamp-2 group-hover:text-primary-600 transition-colors leading-snug">
                     {campaign.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                <p className="text-gray-500 dark:text-gray-400 text-xs mb-3 line-clamp-2 leading-relaxed">
                     {campaign.shortDescription}
                 </p>
 
-                {/* Progress Bar */}
-                <div className="mb-4">
-                    <div className="flex justify-between text-sm mb-2">
-                        <span className="font-semibold text-gray-900 dark:text-white">
-                            {formatCurrency(campaign.raisedAmount)}
-                        </span>
-                        <span className="text-gray-600 dark:text-gray-400">
-                            {progress}%
-                        </span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                {/* Progress */}
+                <div className="mb-3">
+                    <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5">
                         <div
-                            className="bg-primary-600 h-2 rounded-full transition-all duration-500"
+                            className="bg-primary-600 h-1.5 rounded-full transition-all duration-500"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
                 </div>
 
-                {/* Stats */}
-                <div className="flex items-center justify-between text-sm">
+                {/* Stats row */}
+                <div className="flex items-center justify-between text-xs">
                     <div>
-                        <span className="text-gray-600 dark:text-gray-400">Goal: </span>
-                        <span className="font-semibold">{formatCurrency(campaign.goalAmount)}</span>
+                        <p className="font-bold text-gray-900 dark:text-white text-sm">
+                            {formatCurrency(campaign.raisedAmount)}
+                        </p>
+                        <p className="text-gray-400">of {formatCurrency(campaign.goalAmount)}</p>
                     </div>
-                    <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                        <FiHeart size={16} />
+                    <div className="flex items-center gap-1 text-gray-500">
+                        <FiHeart size={12} className="text-red-400" />
                         <span>{campaign.donationCount} donors</span>
                     </div>
                 </div>
-
-                {/* Donate Button */}
-                <button className="w-full mt-4 btn-primary">
-                    Donate Now
-                </button>
             </div>
         </Link>
     );

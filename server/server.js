@@ -17,6 +17,7 @@ import donationRoutes from './routes/donationRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import homepageRoutes from './routes/homepageRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 // Initialize express app
 const app = express();
@@ -55,6 +56,7 @@ app.use('/api/donations', donationRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/homepage', homepageRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/users', userRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
