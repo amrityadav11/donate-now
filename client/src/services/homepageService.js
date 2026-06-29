@@ -64,4 +64,10 @@ export const homepageService = {
         const response = await api.delete(`/homepage/banner-slides/${id}`);
         return response.data;
     },
+
+    // App download section (Admin)
+    updateAppDownload: async (data) => {
+        const response = await api.put('/homepage/app-download', data);
+        return response.data;
+    },
 };

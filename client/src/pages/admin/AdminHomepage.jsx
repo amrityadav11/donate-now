@@ -4,6 +4,7 @@ import { fileToBase64 } from '../../utils/helpers';
 import {
     FiSave, FiUpload, FiPlus, FiTrash2, FiEdit2, FiX,
     FiAlertCircle, FiPhone, FiMail, FiMapPin, FiGlobe, FiLink,
+    FiSmartphone, FiToggleLeft, FiToggleRight,
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import Loading from '../../components/Loading';
@@ -54,6 +55,12 @@ const AdminHomepage = () => {
     const [bannerImagePreview, setBannerImagePreview] = useState('');
     const [deleteBannerConfirm, setDeleteBannerConfirm] = useState(null);
 
+    // App Download
+    const [appDownload, setAppDownload] = useState({ isEnabled: false, title: '', subtitle: '', playStoreUrl: '', appStoreUrl: '' });
+    const [appImageFile, setAppImageFile] = useState(null);
+    const [appImagePreview, setAppImagePreview] = useState('');
+    const appImageRef = useRef(null);
+
     const setSavingKey = (key, val) => setSaving(prev => ({ ...prev, [key]: val }));
 
     const fetchHomepage = async () => {
@@ -66,6 +73,14 @@ const AdminHomepage = () => {
             setAboutImagePreview(hp?.about?.image?.url || '');
             setTestimonials(hp?.testimonials || []);
             setBannerSlides(hp?.bannerSlides || []);
+            setAppDownload({
+                isEnabled: hp?.appDownload?.isEnabled || false,
+                title: hp?.appDownload?.title || '',
+                subtitle: hp?.appDownload?.subtitle || '',
+                playStoreUrl: hp?.appDownload?.playStoreUrl || '',
+                appStoreUrl: hp?.appDownload?.appStoreUrl || '',
+            });
+            setAppImagePreview(hp?.appDownload?.appImage?.url || '');
             setContact({
                 email: hp?.contact?.email || '',
                 phone: hp?.contact?.phone || '',
@@ -233,6 +248,26 @@ const AdminHomepage = () => {
         } catch { toast.error('Failed to delete slide'); }
     };
 
+    // ── App Download ──────────────────────────────────────────────────────────
+    const handleAppImageSelect = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setAppImageFile(file);
+        setAppImagePreview(await fileToBase64(file));
+    };
+
+    const saveAppDownload = async () => {
+        try {
+            setSavingKey('app', true);
+            const payload = { ...appDownload };
+            if (appImageFile) { payload.appImage = await fileToBase64(appImageFile); setAppImageFile(null); }
+            await homepageService.updateAppDownload(payload);
+            toast.success('App download section saved');
+        } catch (err) {
+            toast.error(err?.response?.data?.message || 'Failed to save');
+        } finally { setSavingKey('app', false); }
+    };
+
     if (loading) return <Loading />;
 
     return (
@@ -285,6 +320,69 @@ const AdminHomepage = () => {
                         ))}
                     </div>
                 )}
+            </Section>
+
+            {/* ── App Download Section ──────────────────────────────────── */}
+            <Section title="App Download Section">
+                <div className="flex items-center justify-between">
+                    <p className="text-sm text-gray-500">Show an app download banner on the homepage with Play Store & App Store links.</p>
+                    <button
+                        type="button"
+                        onClick={() => setAppDownload(a => ({ ...a, isEnabled: !a.isEnabled }))}
+                        className={`flex items-center gap-2 text-sm font-semibold px-3 py-1.5 rounded-lg transition-colors ${appDownload.isEnabled ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/40' : 'bg-gray-100 text-gray-500 dark:bg-gray-800'}`}
+                    >
+                        {appDownload.isEnabled ? <FiToggleRight size={18} /> : <FiToggleLeft size={18} />}
+                        {appDownload.isEnabled ? 'Enabled' : 'Disabled'}
+                    </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Section Title</label>
+                        <input type="text" value={appDownload.title}
+                            onChange={e => setAppDownload({ ...appDownload, title: e.target.value })}
+                            className="input-field" placeholder="Donate on the Go" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Subtitle</label>
+                        <input type="text" value={appDownload.subtitle}
+                            onChange={e => setAppDownload({ ...appDownload, subtitle: e.target.value })}
+                            className="input-field" placeholder="Download our app and make a difference anywhere." />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1 flex items-center gap-1">
+                            <FiSmartphone size={12} /> Google Play Store URL
+                        </label>
+                        <input type="url" value={appDownload.playStoreUrl}
+                            onChange={e => setAppDownload({ ...appDownload, playStoreUrl: e.target.value })}
+                            className="input-field" placeholder="https://play.google.com/store/apps/details?id=..." />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1 flex items-center gap-1">
+                            <FiSmartphone size={12} /> Apple App Store URL
+                        </label>
+                        <input type="url" value={appDownload.appStoreUrl}
+                            onChange={e => setAppDownload({ ...appDownload, appStoreUrl: e.target.value })}
+                            className="input-field" placeholder="https://apps.apple.com/app/..." />
+                    </div>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium mb-1">App Preview Image <span className="text-xs text-gray-400">(phone mockup or screenshot)</span></label>
+                    <div className="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden cursor-pointer hover:border-primary-400 transition-colors"
+                        style={{ height: 140 }} onClick={() => appImageRef.current?.click()}>
+                        {appImagePreview
+                            ? <img src={appImagePreview} alt="App preview" className="w-full h-full object-contain bg-gray-50 dark:bg-gray-900" />
+                            : <div className="flex flex-col items-center justify-center h-full text-gray-400"><FiUpload size={24} className="mb-1" /><span className="text-sm">Click to upload app screenshot / mockup</span></div>}
+                        {appImagePreview && <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center"><FiUpload className="text-white" size={22} /></div>}
+                    </div>
+                    <input ref={appImageRef} type="file" accept="image/*" className="hidden" onChange={handleAppImageSelect} />
+                    {appImageFile && <p className="text-xs text-primary-600 mt-1">New image selected — save to upload</p>}
+                </div>
+
+                <button onClick={saveAppDownload} disabled={saving.app} className="btn-primary flex items-center gap-2 disabled:opacity-50">
+                    {saving.app ? <><div className="spinner w-4 h-4 border-2" /> Saving...</> : <><FiSave /> Save App Download</>}
+                </button>
             </Section>
 
             {/* ── Hero Section ─────────────────────────────────────────── */}

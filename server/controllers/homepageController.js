@@ -395,3 +395,37 @@ export const updateContact = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+// @desc    Update app download section
+// @route   PUT /api/homepage/app-download
+// @access  Private (Admin)
+export const updateAppDownload = async (req, res) => {
+    try {
+        let homepage = await Homepage.findOne();
+        if (!homepage) homepage = await Homepage.create({});
+
+        const { isEnabled, title, subtitle, playStoreUrl, appStoreUrl, appImage } = req.body;
+
+        if (!homepage.appDownload) homepage.appDownload = {};
+        if (isEnabled !== undefined) homepage.appDownload.isEnabled = isEnabled;
+        if (title !== undefined) homepage.appDownload.title = title;
+        if (subtitle !== undefined) homepage.appDownload.subtitle = subtitle;
+        if (playStoreUrl !== undefined) homepage.appDownload.playStoreUrl = playStoreUrl;
+        if (appStoreUrl !== undefined) homepage.appDownload.appStoreUrl = appStoreUrl;
+
+        if (appImage && appImage.startsWith('data:')) {
+            if (homepage.appDownload.appImage?.public_id) {
+                await deleteFromCloudinary(homepage.appDownload.appImage.public_id);
+            }
+            const result = await uploadToCloudinary(appImage, 'homepage');
+            homepage.appDownload.appImage = { url: result.url, public_id: result.public_id };
+        }
+
+        homepage.markModified('appDownload');
+        await homepage.save();
+
+        res.status(200).json({ success: true, message: 'App download section updated', homepage });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};

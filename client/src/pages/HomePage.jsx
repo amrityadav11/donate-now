@@ -361,6 +361,79 @@ const HomePage = () => {
                 </section>
             )}
 
+            {/* ── App Download ──────────────────────────────────────────── */}
+            {homepage?.appDownload?.isEnabled && (homepage?.appDownload?.playStoreUrl || homepage?.appDownload?.appStoreUrl) && (
+                <section className="section-padding bg-gray-50 dark:bg-gray-900">
+                    <div className="section-container">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                            {/* Text */}
+                            <div>
+                                <p className="text-xs text-primary-600 font-bold uppercase tracking-widest mb-3">Mobile App</p>
+                                <h2 className="heading-2 mb-4">
+                                    {homepage.appDownload.title || 'Donate on the Go'}
+                                </h2>
+                                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-8 text-sm sm:text-base">
+                                    {homepage.appDownload.subtitle || 'Download our app and make a difference anytime, anywhere.'}
+                                </p>
+                                <div className="flex flex-wrap gap-4">
+                                    {homepage.appDownload.playStoreUrl && (
+                                        <a
+                                            href={homepage.appDownload.playStoreUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-3 bg-gray-900 dark:bg-gray-800 hover:bg-gray-700 dark:hover:bg-gray-700 text-white px-5 py-3 rounded-xl transition-colors shadow-md"
+                                        >
+                                            {/* Google Play icon */}
+                                            <svg viewBox="0 0 24 24" className="w-7 h-7 flex-shrink-0" fill="currentColor">
+                                                <path d="M3.18 23.76c.3.17.64.24.99.2l12.6-11.52-3.24-3.24L3.18 23.76zM20.54 10.2l-2.7-1.56-3.6 3.3 3.6 3.36 2.73-1.58a1.74 1.74 0 0 0 0-3.52zM3 1.06a1.74 1.74 0 0 0-.6 1.32v19.2c0 .5.21.96.6 1.32l.09.08 10.77-10.77v-.24L3.09.98 3 1.06zm10.53 11.1L3 23.4v.05c.35.04.7-.03 1-.2l12.36-7.14-2.83-2.83v.88z" />
+                                            </svg>
+                                            <div className="text-left">
+                                                <p className="text-[10px] text-gray-300 leading-none">GET IT ON</p>
+                                                <p className="text-sm font-semibold leading-tight">Google Play</p>
+                                            </div>
+                                        </a>
+                                    )}
+                                    {homepage.appDownload.appStoreUrl && (
+                                        <a
+                                            href={homepage.appDownload.appStoreUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-3 bg-gray-900 dark:bg-gray-800 hover:bg-gray-700 dark:hover:bg-gray-700 text-white px-5 py-3 rounded-xl transition-colors shadow-md"
+                                        >
+                                            {/* Apple icon */}
+                                            <svg viewBox="0 0 24 24" className="w-7 h-7 flex-shrink-0" fill="currentColor">
+                                                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                                            </svg>
+                                            <div className="text-left">
+                                                <p className="text-[10px] text-gray-300 leading-none">DOWNLOAD ON THE</p>
+                                                <p className="text-sm font-semibold leading-tight">App Store</p>
+                                            </div>
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                            {/* App image / mockup */}
+                            <div className="flex justify-center lg:justify-end">
+                                {homepage.appDownload.appImage?.url ? (
+                                    <img
+                                        src={homepage.appDownload.appImage.url}
+                                        alt="App preview"
+                                        className="max-h-80 sm:max-h-96 object-contain drop-shadow-2xl"
+                                    />
+                                ) : (
+                                    <div className="w-48 sm:w-56 h-80 sm:h-96 bg-gradient-to-br from-primary-600 to-orange-500 rounded-3xl shadow-2xl flex flex-col items-center justify-center gap-4 text-white">
+                                        <svg viewBox="0 0 24 24" className="w-16 h-16 opacity-80" fill="currentColor">
+                                            <path d="M17 1H7C5.9 1 5 1.9 5 3v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm-5 20c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5-4H7V4h10v13z" />
+                                        </svg>
+                                        <p className="text-sm font-semibold opacity-90">App Preview</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
+
             {/* ── CTA banner ────────────────────────────────────────────── */}
             <section className="bg-gradient-to-r from-primary-600 to-orange-500 text-white">
                 <div className="section-container py-14 sm:py-16 text-center">

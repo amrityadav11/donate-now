@@ -11,6 +11,7 @@ import {
     addBannerSlide,
     updateBannerSlide,
     deleteBannerSlide,
+    updateAppDownload,
 } from '../controllers/homepageController.js';
 import { protect } from '../middleware/auth.js';
 
@@ -30,5 +31,6 @@ router.put('/contact', protect, updateContact);
 router.post('/banner-slides', protect, addBannerSlide);
 router.put('/banner-slides/:id', protect, updateBannerSlide);
 router.delete('/banner-slides/:id', protect, deleteBannerSlide);
+router.put('/app-download', protect, updateAppDownload);
 
 export default router;

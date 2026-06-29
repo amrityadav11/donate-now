@@ -108,6 +108,17 @@ const homepageSchema = new mongoose.Schema({
             public_id: String,
         },
     },
+    appDownload: {
+        isEnabled: { type: Boolean, default: false },
+        title: { type: String, default: 'Donate on the Go' },
+        subtitle: { type: String, default: 'Download our app and make a difference anytime, anywhere.' },
+        playStoreUrl: { type: String, default: '' },
+        appStoreUrl: { type: String, default: '' },
+        appImage: {
+            url: String,
+            public_id: String,
+        },
+    },
 }, {
     timestamps: true,
 });
