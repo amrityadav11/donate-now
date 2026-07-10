@@ -18,6 +18,10 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import homepageRoutes from './routes/homepageRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import cartRoutes from './routes/cartRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import itemCampaignRoutes from './routes/itemCampaignRoutes.js';
 
 // Initialize express app
 const app = express();
@@ -58,6 +62,10 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/homepage', homepageRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/item-campaigns', itemCampaignRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {

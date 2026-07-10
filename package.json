@@ -5,6 +5,9 @@
     "scripts": {
         "install-all": "npm install && cd server && npm install && cd ../client && npm install",
         "seed": "cd server && npm run seed",
+        "seed:products": "cd server && node config/seedProducts.js",
+        "seed:all": "cd server && npm run seed && node config/seedProducts.js",
+        "fix:admin": "cd server && node config/fixAdmin.js",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "server": "cd server && npm run dev",
         "client": "cd client && npm run dev",

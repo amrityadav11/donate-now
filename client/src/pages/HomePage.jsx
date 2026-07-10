@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { homepageService } from '../services/homepageService';
 import { campaignService } from '../services/campaignService';
 import { categoryService } from '../services/categoryService';
+import itemCampaignService from '../services/itemCampaignService';
 import { FiArrowRight, FiChevronRight, FiChevronLeft } from 'react-icons/fi';
 import CampaignCard from '../components/CampaignCard';
+import ItemCampaignCard from '../components/ItemCampaignCard';
 import Loading from '../components/Loading';
 import SEO from '../components/SEO';
 
@@ -201,6 +203,7 @@ const HomePage = () => {
     const [homepage, setHomepage] = useState(null);
     const [campaigns, setCampaigns] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [itemCampaigns, setItemCampaigns] = useState([]);
     const [activeCategory, setActiveCategory] = useState('all');
     const [loading, setLoading] = useState(true);
 
@@ -209,10 +212,12 @@ const HomePage = () => {
             homepageService.getHomepage(),
             campaignService.getCampaigns({ limit: 50, status: 'active' }),
             categoryService.getCategories({ isActive: true }),
-        ]).then(([hp, cp, cat]) => {
+            itemCampaignService.getItemCampaigns({ status: 'approved', featured: 'true', limit: 4 }),
+        ]).then(([hp, cp, cat, ic]) => {
             setHomepage(hp.homepage);
             setCampaigns(cp.campaigns);
             setCategories(cat.categories);
+            setItemCampaigns(ic.campaigns || []);
         }).catch(console.error)
             .finally(() => setLoading(false));
     }, []);
@@ -300,6 +305,37 @@ const HomePage = () => {
                     </div>
                 </div>
             </section>
+
+            {/* ── Item Campaigns ────────────────────────────────────────── */}
+            {itemCampaigns.length > 0 && (
+                <section className="section-padding bg-blue-50 dark:bg-gray-900">
+                    <div className="section-container">
+                        <div className="flex items-end justify-between mb-6">
+                            <div>
+                                <p className="text-xs text-blue-600 font-semibold uppercase tracking-widest mb-1">Item Donations</p>
+                                <h2 className="heading-2">Item Campaigns</h2>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Donate essential items directly to those in need</p>
+                            </div>
+                            <Link
+                                to="/item-campaigns"
+                                className="hidden sm:flex items-center gap-1 text-blue-600 text-sm font-semibold hover:gap-2 transition-all"
+                            >
+                                Browse All <FiChevronRight size={16} />
+                            </Link>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                            {itemCampaigns.map(c => (
+                                <ItemCampaignCard key={c._id} campaign={c} />
+                            ))}
+                        </div>
+                        <div className="mt-8 text-center sm:hidden">
+                            <Link to="/item-campaigns" className="btn-outline">
+                                Browse All Item Campaigns
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* ── About ─────────────────────────────────────────────────── */}
             <section className="section-padding bg-gray-50 dark:bg-gray-900">

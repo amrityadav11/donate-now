@@ -1,15 +1,18 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
     FiHome, FiHeart, FiGrid, FiDollarSign, FiMessageSquare,
-    FiSettings, FiLogOut, FiMenu, FiX, FiUser, FiUsers, FiInbox
+    FiSettings, FiLogOut, FiMenu, FiX, FiUser, FiUsers, FiInbox,
+    FiPackage, FiShoppingBag, FiTruck, FiClipboard
 } from 'react-icons/fi';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { campaignService } from '../services/campaignService';
+import itemCampaignService from '../services/itemCampaignService';
 
 const AdminLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [pendingCount, setPendingCount] = useState(0);
+    const [pendingCampaigns, setPendingCampaigns] = useState(0);
     const location = useLocation();
     const { admin, logout } = useAuth();
 
@@ -17,12 +20,18 @@ const AdminLayout = () => {
         campaignService.getCampaignRequests({ status: 'pending' })
             .then((d) => setPendingCount(d.total || 0))
             .catch(() => { });
+        itemCampaignService.getItemCampaigns({ status: 'pending', limit: 1 })
+            .then((d) => setPendingCampaigns(d.pagination?.total || 0))
+            .catch(() => { });
     }, [location.pathname]);
 
     const navItems = [
         { path: '/admin', icon: FiHome, label: 'Dashboard' },
         { path: '/admin/campaigns', icon: FiHeart, label: 'Campaigns' },
         { path: '/admin/campaign-requests', icon: FiInbox, label: 'Requests', badge: pendingCount },
+        { path: '/admin/item-campaigns', icon: FiClipboard, label: 'Item Campaigns', badge: pendingCampaigns },
+        { path: '/admin/products', icon: FiPackage, label: 'Products' },
+        { path: '/admin/orders', icon: FiShoppingBag, label: 'Orders' },
         { path: '/admin/categories', icon: FiGrid, label: 'Categories' },
         { path: '/admin/donations', icon: FiDollarSign, label: 'Donations' },
         { path: '/admin/contacts', icon: FiMessageSquare, label: 'Contacts' },

@@ -47,6 +47,19 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Campaign',
     }],
+    role: {
+        type: String,
+        enum: ['guest', 'donor', 'ngo', 'corporate', 'volunteer', 'delivery_partner', 'admin', 'super_admin'],
+        default: 'donor',
+    },
+    wishlist: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+    }],
+    savedItemCampaigns: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ItemCampaign',
+    }],
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {

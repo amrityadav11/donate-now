@@ -1,15 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiMenu, FiX, FiSun, FiMoon, FiHeart, FiUser, FiLogOut, FiSettings, FiBookmark } from 'react-icons/fi';
+import { FiMenu, FiX, FiSun, FiMoon, FiHeart, FiUser, FiLogOut, FiSettings, FiBookmark, FiShoppingCart, FiPackage, FiShoppingBag } from 'react-icons/fi';
 import { useDarkMode } from '../hooks/useDarkMode';
 import { useUser } from '../hooks/useUser';
 import UserAuthModal from './UserAuthModal';
+import ShoppingCart from './ShoppingCart';
+import cartService from '../services/cartService';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isDark, toggleDarkMode] = useDarkMode();
     const [showAuth, setShowAuth] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [cartOpen, setCartOpen] = useState(false);
+    const [cartItemCount, setCartItemCount] = useState(0);
     const location = useLocation();
     const { user, isLoggedIn, logout, refresh } = useUser();
     const dropdownRef = useRef(null);
@@ -17,9 +21,29 @@ const Navbar = () => {
     const navLinks = [
         { path: '/', label: 'Home' },
         { path: '/campaigns', label: 'Campaigns' },
+        { path: '/item-campaigns', label: 'Item Campaigns' },
         { path: '/about', label: 'About' },
         { path: '/contact', label: 'Contact' },
     ];
+
+    // Load cart count
+    useEffect(() => {
+        loadCartCount();
+    }, []);
+
+    const loadCartCount = async () => {
+        try {
+            const sessionId = localStorage.getItem('cartSessionId');
+            if (sessionId) {
+                const response = await cartService.getCart(sessionId);
+                if (response.cart) {
+                    setCartItemCount(response.cart.items.length);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading cart count:', error);
+        }
+    };
 
     const isActive = (path) => location.pathname === path;
 
@@ -67,8 +91,8 @@ const Navbar = () => {
                             {navLinks.map((link) => (
                                 <Link key={link.path} to={link.path}
                                     className={`font-medium text-sm transition-colors whitespace-nowrap ${isActive(link.path)
-                                            ? 'text-primary-600'
-                                            : 'text-gray-600 dark:text-gray-300 hover:text-primary-600'
+                                        ? 'text-primary-600'
+                                        : 'text-gray-600 dark:text-gray-300 hover:text-primary-600'
                                         }`}>
                                     {link.label}
                                 </Link>
@@ -81,6 +105,20 @@ const Navbar = () => {
                                 className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400"
                                 aria-label="Toggle dark mode">
                                 {isDark ? <FiSun size={18} /> : <FiMoon size={18} />}
+                            </button>
+
+                            {/* Cart Button */}
+                            <button
+                                onClick={() => setCartOpen(true)}
+                                className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400"
+                                aria-label="Shopping cart"
+                            >
+                                <FiShoppingCart size={20} />
+                                {cartItemCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                        {cartItemCount > 9 ? '9+' : cartItemCount}
+                                    </span>
+                                )}
                             </button>
 
                             {/* User auth section */}
@@ -108,6 +146,8 @@ const Navbar = () => {
                                             </div>
                                             {[
                                                 { to: '/profile', icon: FiSettings, label: 'My Profile' },
+                                                { to: '/my-orders', icon: FiPackage, label: 'My Orders' },
+                                                { to: '/ngo', icon: FiShoppingBag, label: 'NGO Portal' },
                                                 { to: '/profile/saved', icon: FiBookmark, label: 'Saved Campaigns' },
                                                 { to: '/start-campaign', icon: FiHeart, label: 'Start a Campaign' },
                                             ].map(({ to, icon: Icon, label }) => (
@@ -148,6 +188,18 @@ const Navbar = () => {
                                 aria-label="Toggle dark mode">
                                 {isDark ? <FiSun size={18} /> : <FiMoon size={18} />}
                             </button>
+                            {/* Mobile Cart */}
+                            <button
+                                onClick={() => setCartOpen(true)}
+                                className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
+                            >
+                                <FiShoppingCart size={20} />
+                                {cartItemCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                                        {cartItemCount}
+                                    </span>
+                                )}
+                            </button>
                             {isLoggedIn ? (
                                 <button onClick={() => setIsOpen(p => !p)} className="flex items-center">
                                     {avatar ? (
@@ -178,8 +230,8 @@ const Navbar = () => {
                             {navLinks.map((link) => (
                                 <Link key={link.path} to={link.path}
                                     className={`flex items-center px-4 py-2.5 rounded-lg font-medium text-sm transition-colors ${isActive(link.path)
-                                            ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30'
-                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                        ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30'
+                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                         }`}>
                                     {link.label}
                                 </Link>
@@ -189,6 +241,9 @@ const Navbar = () => {
                                 <>
                                     <Link to="/profile" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                                         <FiSettings size={15} /> My Profile
+                                    </Link>
+                                    <Link to="/my-orders" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                                        <FiPackage size={15} /> My Orders
                                     </Link>
                                     <Link to="/profile/saved" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                                         <FiBookmark size={15} /> Saved Campaigns
@@ -222,6 +277,13 @@ const Navbar = () => {
             {showAuth && (
                 <UserAuthModal onClose={() => setShowAuth(false)} onSuccess={refresh} />
             )}
+
+            {/* Shopping Cart Sidebar */}
+            <ShoppingCart
+                isOpen={cartOpen}
+                onClose={() => setCartOpen(false)}
+                onCountChange={setCartItemCount}
+            />
         </>
     );
 };

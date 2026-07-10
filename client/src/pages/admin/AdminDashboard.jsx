@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
 import { dashboardService } from '../../services/dashboardService';
 import { formatCurrency, formatDate } from '../../utils/helpers';
-import { FiHeart, FiUsers, FiTarget, FiDollarSign } from 'react-icons/fi';
+import { FiHeart, FiUsers, FiTarget, FiDollarSign, FiBox, FiShoppingBag, FiShoppingCart } from 'react-icons/fi';
+import productService from '../../services/productService';
+import itemCampaignService from '../../services/itemCampaignService';
+import orderService from '../../services/orderService';
 import Loading from '../../components/Loading';
 
 const AdminDashboard = () => {
     const [dashboard, setDashboard] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [extraStats, setExtraStats] = useState({ totalProducts: 0, totalItemCampaigns: 0, totalOrders: 0 });
 
     useEffect(() => {
         fetchDashboard();
+        fetchExtraStats();
     }, []);
 
     const fetchDashboard = async () => {
@@ -20,6 +25,23 @@ const AdminDashboard = () => {
             console.error('Failed to fetch dashboard:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchExtraStats = async () => {
+        try {
+            const [productsRes, itemCampaignsRes, ordersRes] = await Promise.allSettled([
+                productService.getProducts({ limit: 1 }),
+                itemCampaignService.getItemCampaigns({ status: 'all', limit: 1 }),
+                orderService.getAllOrders({ limit: 1 }),
+            ]);
+            setExtraStats({
+                totalProducts: productsRes.status === 'fulfilled' ? (productsRes.value.pagination?.total || productsRes.value.products?.length || 0) : 0,
+                totalItemCampaigns: itemCampaignsRes.status === 'fulfilled' ? (itemCampaignsRes.value.pagination?.total || itemCampaignsRes.value.campaigns?.length || 0) : 0,
+                totalOrders: ordersRes.status === 'fulfilled' ? (ordersRes.value.pagination?.total || ordersRes.value.orders?.length || 0) : 0,
+            });
+        } catch (error) {
+            console.error('Failed to fetch extra stats:', error);
         }
     };
 
@@ -71,6 +93,39 @@ const AdminDashboard = () => {
                     </div>
                     <h3 className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Active Campaigns</h3>
                     <p className="text-2xl font-bold">{stats.activeCampaigns || 0}</p>
+                </div>
+            </div>
+
+            {/* Item Donation Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="card p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
+                            <FiBox className="text-orange-600 text-2xl" />
+                        </div>
+                    </div>
+                    <h3 className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Total Products</h3>
+                    <p className="text-2xl font-bold">{extraStats.totalProducts}</p>
+                </div>
+
+                <div className="card p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-cyan-100 dark:bg-cyan-900 rounded-lg flex items-center justify-center">
+                            <FiShoppingBag className="text-cyan-600 text-2xl" />
+                        </div>
+                    </div>
+                    <h3 className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Total Item Campaigns</h3>
+                    <p className="text-2xl font-bold">{extraStats.totalItemCampaigns}</p>
+                </div>
+
+                <div className="card p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-teal-100 dark:bg-teal-900 rounded-lg flex items-center justify-center">
+                            <FiShoppingCart className="text-teal-600 text-2xl" />
+                        </div>
+                    </div>
+                    <h3 className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">Total Orders</h3>
+                    <p className="text-2xl font-bold">{extraStats.totalOrders}</p>
                 </div>
             </div>
 

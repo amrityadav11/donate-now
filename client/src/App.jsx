@@ -19,8 +19,19 @@ import DonationReceiptPage from './pages/DonationReceiptPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsPage from './pages/TermsPage';
 import NotFoundPage from './pages/NotFoundPage';
+import StartCampaignPage from './pages/StartCampaignPage';
+import UserProfilePage from './pages/UserProfilePage';
 
-// Admin Pages
+// ─── NEW Item Donation Pages ───────────────────────────────────────────────
+import ItemCampaignsPage from './pages/ItemCampaignsPage';
+import ItemCampaignDetailPage from './pages/ItemCampaignDetailPage';
+import CheckoutPage from './pages/CheckoutPage';
+import OrderConfirmationPage from './pages/OrderConfirmationPage';
+import MyOrdersPage from './pages/MyOrdersPage';
+import TrackOrderPage from './pages/TrackOrderPage';
+import ProductCatalogPage from './pages/ProductCatalogPage';
+
+// ─── Admin Pages ───────────────────────────────────────────────────────────
 import AdminLoginPage from './pages/admin/AdminLoginPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminCampaigns from './pages/admin/AdminCampaigns';
@@ -32,12 +43,21 @@ import AdminContacts from './pages/admin/AdminContacts';
 import AdminProfile from './pages/admin/AdminProfile';
 import AdminManagement from './pages/admin/AdminManagement';
 import AdminCampaignRequests from './pages/admin/AdminCampaignRequests';
-import StartCampaignPage from './pages/StartCampaignPage';
-import UserProfilePage from './pages/UserProfilePage';
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminProductForm from './pages/admin/AdminProductForm';
+import AdminItemCampaigns from './pages/admin/AdminItemCampaigns';
+import AdminOrders from './pages/admin/AdminOrders';
 
-// Protected Route Component
+// ─── NGO Pages ─────────────────────────────────────────────────────────────
+import NGODashboard from './pages/ngo/NGODashboard';
+import NGOCampaigns from './pages/ngo/NGOCampaigns';
+import NGOCreateCampaign from './pages/ngo/NGOCreateCampaign';
+import NGOOrders from './pages/ngo/NGOOrders';
+
+// Layouts & Route Guards
 import ProtectedRoute from './components/ProtectedRoute';
-
+import UserProtectedRoute from './components/UserProtectedRoute';
+import NGOLayout from './layouts/NGOLayout';
 function App() {
     // Check for dark mode preference
     useEffect(() => {
@@ -63,6 +83,15 @@ function App() {
                 <Route path="donations/:id/receipt" element={<DonationReceiptPage />} />
                 <Route path="privacy" element={<PrivacyPolicyPage />} />
                 <Route path="terms" element={<TermsPage />} />
+
+                {/* ─── Item Donation Routes ─── */}
+                <Route path="item-campaigns" element={<ItemCampaignsPage />} />
+                <Route path="item-campaigns/:slug" element={<ItemCampaignDetailPage />} />
+                <Route path="products" element={<ProductCatalogPage />} />
+                <Route path="checkout" element={<CheckoutPage />} />
+                <Route path="order-confirmation/:orderId" element={<OrderConfirmationPage />} />
+                <Route path="my-orders" element={<MyOrdersPage />} />
+                <Route path="track-order/:orderId" element={<TrackOrderPage />} />
             </Route>
 
             {/* Start Campaign — standalone full page */}
@@ -71,6 +100,22 @@ function App() {
             {/* User Profile */}
             <Route path="/profile" element={<UserProfilePage />} />
             <Route path="/profile/saved" element={<UserProfilePage />} />
+
+            {/* ─── NGO Routes — uses NGOLayout + user auth ─── */}
+            <Route
+                path="/ngo"
+                element={
+                    <UserProtectedRoute>
+                        <NGOLayout />
+                    </UserProtectedRoute>
+                }
+            >
+                <Route index element={<NGODashboard />} />
+                <Route path="campaigns" element={<NGOCampaigns />} />
+                <Route path="campaigns/new" element={<NGOCreateCampaign />} />
+                <Route path="campaigns/edit/:id" element={<NGOCreateCampaign />} />
+                <Route path="orders" element={<NGOOrders />} />
+            </Route>
 
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLoginPage />} />
@@ -93,6 +138,13 @@ function App() {
                 <Route path="campaign-requests" element={<AdminCampaignRequests />} />
                 <Route path="admins" element={<AdminManagement />} />
                 <Route path="profile" element={<AdminProfile />} />
+
+                {/* ─── New Admin Routes ─── */}
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="products/new" element={<AdminProductForm />} />
+                <Route path="products/edit/:id" element={<AdminProductForm />} />
+                <Route path="item-campaigns" element={<AdminItemCampaigns />} />
+                <Route path="orders" element={<AdminOrders />} />
             </Route>
 
             {/* 404 Page */}

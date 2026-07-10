@@ -63,8 +63,7 @@ const paymentSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-// Index for faster queries
-paymentSchema.index({ orderId: 1 });
+// orderId unique already enforced in field definition
 paymentSchema.index({ paymentId: 1 });
 paymentSchema.index({ status: 1 });
 paymentSchema.index({ campaign: 1 });
