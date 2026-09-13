@@ -329,7 +329,7 @@ If you believe your privacy rights have been violated, you can file a complaint 
             <div className="min-h-screen bg-white dark:bg-gray-950">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-primary-600 to-orange-500 text-white py-12 sm:py-16">
-                    <div className="section-container">
+                    <div className="section-container text-center">
                         <h1 className="text-4xl sm:text-5xl font-bold mb-4">Privacy Policy</h1>
                         <p className="text-lg text-white/90">
                             Your privacy is important to us. Learn how DaanSathi collects, uses, and protects your information.

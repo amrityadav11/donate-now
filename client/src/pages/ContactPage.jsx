@@ -20,37 +20,37 @@ const ContactPage = () => {
         {
             id: 'general',
             name: 'General Inquiry',
-            email: 'support@daansathi.com',
+            email: 'rajare353@gmail.com',
             description: 'General questions about DaanSathi'
         },
         {
             id: 'donation',
             name: 'Donation Issue',
-            email: 'donations@daansathi.com',
+            email: 'rajare353@gmail.com',
             description: 'Issues with donations or payments'
         },
         {
             id: 'refund',
             name: 'Refund Request',
-            email: 'refunds@daansathi.com',
+            email: 'rajare353@gmail.com',
             description: 'Refund and payment disputes'
         },
         {
             id: 'ngo',
             name: 'NGO Partnership',
-            email: 'ngo@daansathi.com',
+            email: 'rajare353@gmail.com',
             description: 'Create or manage campaigns'
         },
         {
             id: 'legal',
             name: 'Legal & Privacy',
-            email: 'legal@daansathi.com',
+            email: 'rajare353@gmail.com',
             description: 'Privacy, legal, or compliance issues'
         },
         {
             id: 'grievance',
             name: 'Grievance Officer',
-            email: 'grievance@daansathi.com',
+            email: 'rajare353@gmail.com',
             description: 'Formal complaints and disputes'
         }
     ];
@@ -109,7 +109,7 @@ const ContactPage = () => {
             <div className="min-h-screen bg-white dark:bg-gray-950">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-primary-600 to-orange-500 text-white py-12 sm:py-16">
-                    <div className="section-container">
+                    <div className="section-container text-center">
                         <h1 className="text-4xl sm:text-5xl font-bold mb-4">Contact Us</h1>
                         <p className="text-lg text-white/90">
                             We're here to help. Reach out with questions, feedback, or partnership inquiries.
@@ -127,8 +127,8 @@ const ContactPage = () => {
                                     key={category.id}
                                     onClick={() => setSelectedCategory(category.id)}
                                     className={`p-4 rounded-lg border-2 transition-all text-left ${selectedCategory === category.id
-                                            ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary-300 dark:hover:border-primary-700'
+                                        ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
+                                        : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary-300 dark:hover:border-primary-700'
                                         }`}
                                 >
                                     <h3 className="font-semibold mb-1">{category.name}</h3>
@@ -156,7 +156,7 @@ const ContactPage = () => {
                                             {currentCategory ? currentCategory.name : 'Email'}
                                         </h3>
                                         <p className="text-gray-600 dark:text-gray-400">
-                                            {currentCategory ? currentCategory.email : 'support@daansathi.com'}
+                                            {currentCategory ? currentCategory.email : 'rajare353@gmail.com'}
                                         </p>
                                         <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                                             Response within 24-48 hours
@@ -170,9 +170,9 @@ const ContactPage = () => {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold mb-1">Support Line</h3>
-                                        <p className="text-gray-600 dark:text-gray-400">+91-XXXX-XXXX-XXX</p>
+                                        <p className="text-gray-600 dark:text-gray-400">+91-8541-XXXX-XXX</p>
                                         <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                                            Coming soon
+                                            Available for inquiries
                                         </p>
                                     </div>
                                 </div>
@@ -185,6 +185,7 @@ const ContactPage = () => {
                                         <h3 className="font-semibold mb-1">Office Address</h3>
                                         <p className="text-gray-600 dark:text-gray-400">
                                             DaanSathi<br />
+                                            Samastipur, Bihar 848207<br />
                                             India
                                         </p>
                                     </div>

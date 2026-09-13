@@ -78,9 +78,7 @@ const Navbar = () => {
 
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-                            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                                <FiHeart className="text-white text-base" />
-                            </div>
+                            <img src="/logo.svg" alt="DaanSathi" className="w-8 h-8" />
                             <span className="text-lg font-extrabold text-gray-900 dark:text-white tracking-tight hidden sm:block">
                                 DaanSathi
                             </span>

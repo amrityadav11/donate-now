@@ -50,8 +50,8 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Brand */}
                     <div>
-                        <div className="flex items-center gap-2 mb-4">
-                            <FiHeart className="text-primary-500 text-2xl" />
+                        <div className="flex items-center gap-3 mb-4">
+                            <img src="/logo.svg" alt="DaanSathi Logo" className="w-10 h-10" />
                             <h3 className="text-xl font-bold text-white">DaanSathi</h3>
                         </div>
                         <p className="text-sm mb-4">
@@ -126,76 +126,53 @@ const Footer = () => {
                     <div>
                         <h4 className="text-lg font-semibold text-white mb-4">Contact Us</h4>
                         <ul className="space-y-3 text-sm">
-                            {(contact?.email || 'contact@donation.com') && (
-                                <li className="flex items-start gap-2">
-                                    <FiMail className="mt-0.5 flex-shrink-0 text-primary-400" size={15} />
-                                    <a
-                                        href={`mailto:${contact?.email || 'contact@donation.com'}`}
-                                        className="hover:text-primary-400 transition-colors break-all"
-                                    >
-                                        {contact?.email || 'contact@donation.com'}
-                                    </a>
-                                </li>
-                            )}
-                            {(contact?.phone || '+91 1234567890') && (
-                                <li className="flex items-start gap-2">
-                                    <FiPhone className="mt-0.5 flex-shrink-0 text-primary-400" size={15} />
-                                    <a
-                                        href={`tel:${contact?.phone || '+911234567890'}`}
-                                        className="hover:text-primary-400 transition-colors"
-                                    >
-                                        {contact?.phone || '+91 1234567890'}
-                                    </a>
-                                </li>
-                            )}
-                            {(contact?.address) && (
-                                <li className="flex items-start gap-2">
-                                    <FiMapPin className="mt-0.5 flex-shrink-0 text-primary-400" size={15} />
-                                    <span>{contact.address}</span>
-                                </li>
-                            )}
-                            {contact?.website && (
-                                <li className="flex items-start gap-2">
-                                    <FiGlobe className="mt-0.5 flex-shrink-0 text-primary-400" size={15} />
-                                    <a
-                                        href={contact.website}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="hover:text-primary-400 transition-colors"
-                                    >
-                                        {contact.website.replace(/^https?:\/\//, '')}
-                                    </a>
-                                </li>
-                            )}
+                            <li className="flex items-start gap-2">
+                                <FiMail className="mt-0.5 flex-shrink-0 text-primary-400" size={15} />
+                                <a
+                                    href="mailto:rajare353@gmail.com"
+                                    className="hover:text-primary-400 transition-colors break-all"
+                                >
+                                    rajare353@gmail.com
+                                </a>
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <FiPhone className="mt-0.5 flex-shrink-0 text-primary-400" size={15} />
+                                <a
+                                    href="tel:+918541"
+                                    className="hover:text-primary-400 transition-colors"
+                                >
+                                    8541-XXXX-XXX
+                                </a>
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <FiMapPin className="mt-0.5 flex-shrink-0 text-primary-400" size={15} />
+                                <span>Samastipur, Bihar 848207, India</span>
+                            </li>
                         </ul>
                     </div>
                 </div>
 
                 {/* Bottom Bar */}
                 <div className="border-t border-gray-800 mt-8 pt-8">
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 text-sm">
-                        <p>&copy; {currentYear} DaanSathi. All rights reserved.</p>
-                        <div className="flex flex-wrap gap-4 justify-center">
-                            <Link to="/privacy" className="hover:text-primary-400 transition-colors">
+                    <div className="flex flex-col items-center justify-center gap-4 mb-6 text-sm">
+                        <div className="flex flex-wrap gap-6 justify-center">
+                            <Link to="/privacy" className="hover:text-primary-400 transition-colors font-medium">
                                 Privacy Policy
                             </Link>
                             <span className="text-gray-700">•</span>
-                            <Link to="/terms-and-conditions" className="hover:text-primary-400 transition-colors">
+                            <Link to="/terms-and-conditions" className="hover:text-primary-400 transition-colors font-medium">
                                 Terms & Conditions
                             </Link>
                             <span className="text-gray-700">•</span>
-                            <Link to="/cancellation-refund" className="hover:text-primary-400 transition-colors">
+                            <Link to="/cancellation-refund" className="hover:text-primary-400 transition-colors font-medium">
                                 Refund Policy
                             </Link>
                             <span className="text-gray-700">•</span>
-                            <Link to="/pricing" className="hover:text-primary-400 transition-colors">
+                            <Link to="/pricing" className="hover:text-primary-400 transition-colors font-medium">
                                 Pricing & Fees
                             </Link>
-                            <span className="text-gray-700">•</span>
-                            <Link to="/contact" className="hover:text-primary-400 transition-colors">
-                                Contact Us
-                            </Link>
                         </div>
+                        <p>&copy; {currentYear} DaanSathi. All rights reserved.</p>
                     </div>
                     <div className="text-xs text-gray-500 text-center">
                         <p>DaanSathi is a certified donation platform committed to transparency, security, and social impact.</p>

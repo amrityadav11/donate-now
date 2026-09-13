@@ -431,7 +431,7 @@ A: Login to your account and visit "My Donations" or email refunds@daansathi.com
             <div className="min-h-screen bg-white dark:bg-gray-950">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-primary-600 to-orange-500 text-white py-12 sm:py-16">
-                    <div className="section-container">
+                    <div className="section-container text-center">
                         <h1 className="text-4xl sm:text-5xl font-bold mb-4">Cancellation & Refund Policy</h1>
                         <p className="text-lg text-white/90">
                             Understand our transparent refund policy and when refunds are available.
