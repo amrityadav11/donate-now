@@ -78,7 +78,7 @@ const Navbar = () => {
 
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-                            <img src="/logo.svg" alt="DaanSathi" className="w-8 h-8" />
+                            <img src="/logo.png" alt="DaanSathi" className="w-8 h-8" />
                             <span className="text-lg font-extrabold text-gray-900 dark:text-white tracking-tight hidden sm:block">
                                 DaanSathi
                             </span>

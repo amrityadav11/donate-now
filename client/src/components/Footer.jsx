@@ -51,7 +51,7 @@ const Footer = () => {
                     {/* Brand */}
                     <div>
                         <div className="flex items-center gap-3 mb-4">
-                            <img src="/logo.svg" alt="DaanSathi Logo" className="w-10 h-10" />
+                            <img src="/logo.png" alt="DaanSathi Logo" className="w-10 h-10" />
                             <h3 className="text-xl font-bold text-white">DaanSathi</h3>
                         </div>
                         <p className="text-sm mb-4">
