@@ -210,7 +210,7 @@ const HomePage = () => {
     useEffect(() => {
         Promise.all([
             homepageService.getHomepage(),
-            campaignService.getCampaigns({ limit: 50, status: 'active' }),
+            campaignService.getCampaigns({ limit: 50 }),
             categoryService.getCategories({ isActive: true }),
             itemCampaignService.getItemCampaigns({ status: 'approved', featured: 'true', limit: 4 }),
         ]).then(([hp, cp, cat, ic]) => {
