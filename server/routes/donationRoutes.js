@@ -12,7 +12,7 @@ import { donationValidation, validate } from '../middleware/validator.js';
 const router = express.Router();
 
 // Public routes
-router.post('/', donationValidation, validate, createDonation);
+router.post('/', createDonation);  // Validation handled in controller instead
 router.get('/campaign/:id', getCampaignDonations); // must come before /:id
 router.get('/:id', getDonation);
 router.get('/:id/receipt', getDonationReceipt);

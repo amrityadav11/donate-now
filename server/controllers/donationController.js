@@ -96,6 +96,21 @@ export const createDonation = async (req, res) => {
             message,
         } = req.body;
 
+        // Simple validation
+        if (!campaignId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Campaign ID is required',
+            });
+        }
+
+        if (!amount || isNaN(amount) || amount < 1) {
+            return res.status(400).json({
+                success: false,
+                message: 'Amount must be at least 1',
+            });
+        }
+
         // Check if campaign exists
         const campaign = await Campaign.findById(campaignId);
 
@@ -118,10 +133,10 @@ export const createDonation = async (req, res) => {
         // Create donation with pending status
         const donation = await Donation.create({
             campaign: campaignId,
-            amount,
-            donorName: isAnonymous ? 'Anonymous' : (donorName || 'Anonymous'),
-            donorEmail: isAnonymous ? null : donorEmail,
-            donorPhone: isAnonymous ? null : donorPhone,
+            amount: parseFloat(amount),
+            donorName: donorName || 'Anonymous',
+            donorEmail: donorEmail || null,
+            donorPhone: donorPhone || null,
             isAnonymous: Boolean(isAnonymous),
             message: message || '',
             status: 'pending',
@@ -140,6 +155,7 @@ export const createDonation = async (req, res) => {
             },
         });
     } catch (error) {
+        console.error('Donation creation error:', error);
         res.status(500).json({
             success: false,
             message: error.message,
