@@ -1,4 +1,4 @@
-# Donation Website - Full Stack MERN Application
+# DaanSathi - Full Stack MERN Application
 
 A modern, production-ready donation platform where visitors can browse causes and donate instantly without registration.
 
@@ -50,7 +50,7 @@ A modern, production-ready donation platform where visitors can browse causes an
 ## 📁 Project Structure
 
 ```
-donation-website/
+daansathi/
 ├── client/                 # React frontend
 │   ├── src/
 │   │   ├── components/    # Reusable components

@@ -142,7 +142,7 @@ const CheckoutPage = () => {
                 key: razorpayKeyId || import.meta.env.VITE_RAZORPAY_KEY_ID,
                 amount: order.total * 100,
                 currency: 'INR',
-                name: 'DonateNow',
+                name: 'DaanSathi',
                 description: 'Item Donation',
                 order_id: razorpayOrderId,
                 handler: async function (response) {

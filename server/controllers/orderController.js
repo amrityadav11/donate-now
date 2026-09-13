@@ -2,13 +2,8 @@ import Order from '../models/Order.js';
 import Cart from '../models/Cart.js';
 import Product from '../models/Product.js';
 import ItemCampaign from '../models/ItemCampaign.js';
-import Razorpay from 'razorpay';
+import razorpay from '../config/razorpay.js';
 import crypto from 'crypto';
-
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
 
 // @desc    Create order from cart
 // @route   POST /api/orders

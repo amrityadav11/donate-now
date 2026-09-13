@@ -1,7 +1,7 @@
 # Item-Based Donation Features - DonateKart Style
 
 ## Overview
-This document describes the new item-based donation functionality added to the existing DonateNow platform, inspired by DonateKart.
+This document describes the new item-based donation functionality added to the existing DaanSathi platform, inspired by DonateKart.
 
 ## ✅ Completed Backend Features
 

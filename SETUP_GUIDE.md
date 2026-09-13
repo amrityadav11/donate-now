@@ -1,8 +1,8 @@
-# DonateNow - Complete Setup Guide
+# DaanSathi - Complete Setup Guide
 
 ## Project Overview
 
-DonateNow is a full-stack MERN donation platform with **dual donation systems**:
+DaanSathi is a full-stack MERN donation platform with **dual donation systems**:
 1. **Cash-based donations** - Traditional fundraising campaigns
 2. **Item-based donations** - DonateKart-style product donation system
 
@@ -68,7 +68,7 @@ PORT=5000
 NODE_ENV=development
 
 # Database
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/donatenow?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/daansathi?retryWrites=true&w=majority
 
 # JWT
 JWT_SECRET=your_super_secret_jwt_key_min_32_characters

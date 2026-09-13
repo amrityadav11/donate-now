@@ -105,7 +105,7 @@ FRONTEND_URL=https://your-frontend-url.vercel.app
 3. Click "New +" > "Web Service"
 4. Connect your GitHub repository
 5. Configure:
-   - **Name**: donation-backend
+   - **Name**: daansathi-backend
    - **Root Directory**: server
    - **Environment**: Node
    - **Build Command**: `npm install`
@@ -113,7 +113,7 @@ FRONTEND_URL=https://your-frontend-url.vercel.app
 6. Add Environment Variables (from your .env file)
 7. Click "Create Web Service"
 8. Wait for deployment to complete
-9. Copy the deployed URL (e.g., `https://donation-backend.onrender.com`)
+9. Copy the deployed URL (e.g., `https://daansathi-backend.onrender.com`)
 
 ### Initialize Database
 
@@ -152,7 +152,7 @@ VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
    - `VITE_RAZORPAY_KEY_ID`
 6. Click "Deploy"
 7. Wait for deployment
-8. Copy the deployed URL (e.g., `https://your-donation-site.vercel.app`)
+8. Copy the deployed URL (e.g., `https://dansathi.vercel.app`)
 
 ### Update Backend FRONTEND_URL
 
@@ -166,13 +166,13 @@ VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
 
 1. Go to Razorpay Dashboard
 2. Settings > Webhooks
-3. Add webhook URL: `https://your-backend-url.onrender.com/api/payments/webhook`
+3. Add webhook URL: `https://daansathi-backend.onrender.com/api/payments/webhook`
 4. Select events: `payment.captured`, `payment.failed`
 5. Save webhook secret (if provided)
 
 ### 2. Test Admin Login
 
-1. Visit: `https://your-frontend-url.vercel.app/admin/login`
+1. Visit: `https://dansathi.vercel.app/admin/login`
 2. Use default credentials:
    - Email: admin@donation.com
    - Password: admin123

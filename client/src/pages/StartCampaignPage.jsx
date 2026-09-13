@@ -268,7 +268,7 @@ const StartCampaignPage = () => {
                             <div className="w-9 h-9 bg-primary-600 rounded-lg flex items-center justify-center">
                                 <FiHeart className="text-white text-lg" />
                             </div>
-                            <span className="text-xl font-extrabold text-gray-900 dark:text-white">DonateNow</span>
+                            <span className="text-xl font-extrabold text-gray-900 dark:text-white">DaanSathi</span>
                         </Link>
                     </div>
 

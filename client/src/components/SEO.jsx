@@ -6,7 +6,7 @@ const SEO = ({ title, description, keywords, ogImage, url }) => {
     const defaultKeywords = 'donation, charity, fundraising, help, support';
     const siteUrl = 'http://localhost:5173';
 
-    const seoTitle = title ? `${title} | DonateNow` : defaultTitle;
+    const seoTitle = title ? `${title} | DaanSathi` : defaultTitle;
     const seoDescription = description || defaultDescription;
     const seoKeywords = keywords || defaultKeywords;
     const seoUrl = url ? `${siteUrl}${url}` : siteUrl;

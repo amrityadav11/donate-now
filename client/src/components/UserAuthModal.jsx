@@ -56,7 +56,7 @@ const UserAuthModal = ({ onClose, onSuccess }) => {
                             <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                                 <FiHeart size={16} />
                             </div>
-                            <span className="font-bold text-lg">DonateNow</span>
+                            <span className="font-bold text-lg">DaanSathi</span>
                         </div>
                         <button onClick={onClose} className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
                             <FiX size={20} />
@@ -75,8 +75,8 @@ const UserAuthModal = ({ onClose, onSuccess }) => {
                     {['login', 'register'].map((m) => (
                         <button key={m} onClick={() => { setMode(m); setErrors({}); }}
                             className={`flex-1 py-3 text-sm font-semibold transition-colors capitalize ${mode === m
-                                    ? 'text-primary-600 border-b-2 border-primary-600'
-                                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                                ? 'text-primary-600 border-b-2 border-primary-600'
+                                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                                 }`}>
                             {m === 'login' ? 'Sign In' : 'Create Account'}
                         </button>

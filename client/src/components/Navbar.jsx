@@ -82,7 +82,7 @@ const Navbar = () => {
                                 <FiHeart className="text-white text-base" />
                             </div>
                             <span className="text-lg font-extrabold text-gray-900 dark:text-white tracking-tight hidden sm:block">
-                                DonateNow
+                                DaanSathi
                             </span>
                         </Link>
 

@@ -2,7 +2,7 @@
 
 ## 🎉 Congratulations!
 
-Your DonateNow platform now has **DonateKart-style item-based donation functionality**!
+Your DaanSathi platform now has **DonateKart-style item-based donation functionality**!
 
 ---
 

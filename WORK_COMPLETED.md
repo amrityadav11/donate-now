@@ -2,7 +2,7 @@
 
 ## 📊 Overall Progress: 60%
 
-**Project**: DonateNow with DonateKart-style Item Donations  
+**Project**: DaanSathi with DonateKart-style Item Donations  
 **Status**: Backend 100% Complete | Frontend 30% Complete  
 **Time Spent**: ~6-8 hours  
 **Production Ready**: Backend Yes, Frontend Partial

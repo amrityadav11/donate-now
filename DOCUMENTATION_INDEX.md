@@ -1,6 +1,6 @@
 # Documentation Index
 
-Welcome to the DonateNow project documentation! This index will help you find the information you need quickly.
+Welcome to the DaanSathi project documentation! This index will help you find the information you need quickly.
 
 ---
 

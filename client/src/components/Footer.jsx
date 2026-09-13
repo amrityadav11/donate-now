@@ -52,7 +52,7 @@ const Footer = () => {
                     <div>
                         <div className="flex items-center gap-2 mb-4">
                             <FiHeart className="text-primary-500 text-2xl" />
-                            <h3 className="text-xl font-bold text-white">DonateNow</h3>
+                            <h3 className="text-xl font-bold text-white">DaanSathi</h3>
                         </div>
                         <p className="text-sm mb-4">
                             Making a positive impact by connecting generous donors with meaningful causes.
@@ -173,7 +173,7 @@ const Footer = () => {
 
                 {/* Bottom Bar */}
                 <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm">
-                    <p>&copy; {currentYear} DonateNow. All rights reserved.</p>
+                    <p>&copy; {currentYear} DaanSathi. All rights reserved.</p>
                     <div className="flex gap-6">
                         <Link to="/privacy" className="hover:text-primary-400 transition-colors">
                             Privacy Policy

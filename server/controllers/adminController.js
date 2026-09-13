@@ -44,7 +44,7 @@ export const login = async (req, res) => {
         await admin.save();
 
         // Generate token
-        const token = generateToken(admin._id);
+        const token = generateToken(admin._id, 'admin');
 
         res.status(200).json({
             success: true,

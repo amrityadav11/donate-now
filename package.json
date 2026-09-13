@@ -1,7 +1,7 @@
 {
-    "name": "donation-website",
+    "name": "daansathi",
     "version": "1.0.0",
-    "description": "Full-stack MERN donation platform",
+    "description": "Full-stack MERN donation platform - DaanSathi",
     "scripts": {
         "install-all": "npm install && cd server && npm install && cd ../client && npm install",
         "seed": "cd server && npm run seed",
