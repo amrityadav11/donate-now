@@ -106,7 +106,9 @@ export const createDonation = async (req, res) => {
             });
         }
 
-        if (campaign.status !== 'active') {
+        // Allow donations to campaigns with active, paused, or completed status
+        const acceptingDonations = ['active', 'paused', 'completed'].includes(campaign.status);
+        if (!acceptingDonations) {
             return res.status(400).json({
                 success: false,
                 message: 'This campaign is not accepting donations',
