@@ -415,7 +415,7 @@ Response Time: We respond within 48 hours`
 
             <div className="min-h-screen bg-white dark:bg-gray-950">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-primary-600 to-orange-500 text-white py-12 sm:py-16">
+                <div className="bg-gradient-to-r from-primary-600 to-orange-500 text-white py-8 sm:py-12">
                     <div className="section-container text-center">
                         <h1 className="text-4xl sm:text-5xl font-bold mb-4">Terms & Conditions</h1>
                         <p className="text-lg text-white/90">
