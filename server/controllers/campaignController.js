@@ -13,8 +13,13 @@ export const getCampaigns = async (req, res) => {
         const filter = {};
 
         if (category) filter.category = category;
-        if (status) filter.status = status;
-        else filter.status = 'active'; // Default to active campaigns for public
+        // If no status specified, show campaigns with 'active', 'ongoing', or no status restriction for public viewing
+        if (status) {
+            filter.status = status;
+        } else {
+            // Show active, paused, and completed campaigns (exclude draft, pending, rejected)
+            filter.status = { $in: ['active', 'paused', 'completed'] };
+        }
         if (featured !== undefined) filter.featured = featured === 'true';
         if (search) {
             filter.$or = [
