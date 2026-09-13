@@ -63,30 +63,7 @@ export const donationValidation = [
         .withMessage('Amount must be a number')
         .isFloat({ min: 1 })
         .withMessage('Amount must be at least 1'),
-    body('donorName')
-        .custom((value, { req }) => {
-            // Only required if not anonymous
-            if (!req.body.isAnonymous && (!value || value.trim() === '')) {
-                throw new Error('Donor name is required for non-anonymous donations');
-            }
-            return true;
-        }),
-    body('donorEmail')
-        .custom((value, { req }) => {
-            // Only validate if provided AND not anonymous
-            if (value && value.trim() !== '' && !req.body.isAnonymous) {
-                // Email is optional, but if provided must be valid
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(value)) {
-                    throw new Error('Please provide a valid email');
-                }
-            }
-            return true;
-        })
-        .optional({ checkFalsy: true }),
-    body('donorPhone')
-        .optional({ checkFalsy: true })
-        .trim(),
+    // All other fields are completely optional
 ];
 
 export const contactValidation = [

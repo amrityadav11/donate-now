@@ -59,32 +59,41 @@ const DonatePage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validation
+        // Client-side validation
         if (!formData.amount || parseFloat(formData.amount) < 1) {
             toast.error('Please enter a valid amount');
             return;
         }
 
-        if (!formData.isAnonymous && !formData.donorName) {
+        if (!formData.isAnonymous && !formData.donorName?.trim()) {
             toast.error('Please enter your name or select anonymous donation');
             return;
+        }
+
+        if (!formData.isAnonymous && formData.donorEmail && formData.donorEmail.trim() !== '') {
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.donorEmail)) {
+                toast.error('Please enter a valid email address');
+                return;
+            }
         }
 
         try {
             setProcessing(true);
 
-            // Create donation
+            // Create donation - send exactly what user entered
             const donationData = await donationService.createDonation({
                 campaignId: id,
                 amount: parseFloat(formData.amount),
-                donorName: formData.isAnonymous ? null : formData.donorName,
-                donorEmail: formData.isAnonymous ? null : formData.donorEmail,
-                donorPhone: formData.isAnonymous ? null : formData.donorPhone,
+                donorName: formData.donorName || null,
+                donorEmail: formData.donorEmail || null,
+                donorPhone: formData.donorPhone || null,
                 isAnonymous: formData.isAnonymous,
-                message: formData.message,
+                message: formData.message || null,
             });
 
-            // Process payment — resolves on success, rejects on cancel or failure
+            // Process payment
             await paymentService.processPayment(donationData.donation.id, {
                 donorName: formData.donorName,
                 donorEmail: formData.donorEmail,
