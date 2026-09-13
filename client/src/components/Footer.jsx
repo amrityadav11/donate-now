@@ -172,15 +172,33 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm">
-                    <p>&copy; {currentYear} DaanSathi. All rights reserved.</p>
-                    <div className="flex gap-6">
-                        <Link to="/privacy" className="hover:text-primary-400 transition-colors">
-                            Privacy Policy
-                        </Link>
-                        <Link to="/terms" className="hover:text-primary-400 transition-colors">
-                            Terms &amp; Conditions
-                        </Link>
+                <div className="border-t border-gray-800 mt-8 pt-8">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 text-sm">
+                        <p>&copy; {currentYear} DaanSathi. All rights reserved.</p>
+                        <div className="flex flex-wrap gap-4 justify-center">
+                            <Link to="/privacy" className="hover:text-primary-400 transition-colors">
+                                Privacy Policy
+                            </Link>
+                            <span className="text-gray-700">•</span>
+                            <Link to="/terms-and-conditions" className="hover:text-primary-400 transition-colors">
+                                Terms & Conditions
+                            </Link>
+                            <span className="text-gray-700">•</span>
+                            <Link to="/cancellation-refund" className="hover:text-primary-400 transition-colors">
+                                Refund Policy
+                            </Link>
+                            <span className="text-gray-700">•</span>
+                            <Link to="/pricing" className="hover:text-primary-400 transition-colors">
+                                Pricing & Fees
+                            </Link>
+                            <span className="text-gray-700">•</span>
+                            <Link to="/contact" className="hover:text-primary-400 transition-colors">
+                                Contact Us
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="text-xs text-gray-500 text-center">
+                        <p>DaanSathi is a certified donation platform committed to transparency, security, and social impact.</p>
                     </div>
                 </div>
             </div>

@@ -18,6 +18,9 @@ import PaymentFailedPage from './pages/PaymentFailedPage';
 import DonationReceiptPage from './pages/DonationReceiptPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsPage from './pages/TermsPage';
+import TermsAndConditionsPage from './pages/TermsAndConditionsPage';
+import CancellationRefundPage from './pages/CancellationRefundPage';
+import PricingDonationDetailsPage from './pages/PricingDonationDetailsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import StartCampaignPage from './pages/StartCampaignPage';
 import UserProfilePage from './pages/UserProfilePage';
@@ -83,6 +86,9 @@ function App() {
                 <Route path="donations/:id/receipt" element={<DonationReceiptPage />} />
                 <Route path="privacy" element={<PrivacyPolicyPage />} />
                 <Route path="terms" element={<TermsPage />} />
+                <Route path="terms-and-conditions" element={<TermsAndConditionsPage />} />
+                <Route path="cancellation-refund" element={<CancellationRefundPage />} />
+                <Route path="pricing" element={<PricingDonationDetailsPage />} />
 
                 {/* ─── Item Donation Routes ─── */}
                 <Route path="item-campaigns" element={<ItemCampaignsPage />} />
