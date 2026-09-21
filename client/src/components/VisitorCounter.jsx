@@ -9,6 +9,7 @@ const VisitorCounter = ({ compact = false }) => {
         onlineVisitors: 0,
     });
     const [loading, setLoading] = useState(true);
+    const [isDemo, setIsDemo] = useState(false);
 
     useEffect(() => {
         // Record visitor on component mount
@@ -23,8 +24,18 @@ const VisitorCounter = ({ compact = false }) => {
                 const data = await visitorService.getStats();
                 console.log('Visitor stats:', data);
                 setStats(data);
+                setIsDemo(false);
             } catch (error) {
                 console.error('Error in visitor tracking:', error);
+                // Show demo data if API fails
+                console.log('Showing demo data - API might be down');
+                setIsDemo(true);
+                setStats({
+                    totalVisitors: 1,
+                    todayVisitors: 1,
+                    sevenDaysVisitors: 1,
+                    onlineVisitors: 1,
+                });
             } finally {
                 setLoading(false);
             }
@@ -49,8 +60,13 @@ const VisitorCounter = ({ compact = false }) => {
                 const data = await visitorService.getStats();
                 console.log('Updated visitor stats:', data);
                 setStats(data);
+                if (isDemo) setIsDemo(false);
             } catch (error) {
                 console.error('Error fetching stats:', error);
+                if (!isDemo) {
+                    console.log('API appears to be down, using demo data');
+                    setIsDemo(true);
+                }
             }
         }, 10000); // Refresh every 10 seconds
 
@@ -58,7 +74,7 @@ const VisitorCounter = ({ compact = false }) => {
             clearInterval(heartbeatInterval);
             clearInterval(statsInterval);
         };
-    }, []);
+    }, [isDemo]);
 
     if (compact) {
         // Compact version for footer
