@@ -1,7 +1,12 @@
 import express from 'express';
-import visitorController from '../controllers/visitorController.js';
+import * as visitorController from '../controllers/visitorController.js';
 
 const router = express.Router();
+
+// Health check
+router.get('/health', (req, res) => {
+    res.status(200).json({ success: true, message: 'Visitor API is running' });
+});
 
 // Get total visitors and statistics
 router.get('/stats', visitorController.getVisitorStats);

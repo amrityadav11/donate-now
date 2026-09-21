@@ -15,10 +15,13 @@ const VisitorCounter = ({ compact = false }) => {
         const recordAndFetchStats = async () => {
             try {
                 // Record the visit
+                console.log('Recording visitor...');
                 await visitorService.recordVisitor();
 
                 // Fetch latest statistics
+                console.log('Fetching visitor stats...');
                 const data = await visitorService.getStats();
+                console.log('Visitor stats:', data);
                 setStats(data);
             } catch (error) {
                 console.error('Error in visitor tracking:', error);
@@ -32,6 +35,7 @@ const VisitorCounter = ({ compact = false }) => {
         // Set up a heartbeat to update activity every 30 seconds
         const heartbeatInterval = setInterval(async () => {
             try {
+                console.log('Updating visitor activity...');
                 await visitorService.updateActivity();
             } catch (error) {
                 console.error('Error updating activity:', error);
@@ -41,7 +45,9 @@ const VisitorCounter = ({ compact = false }) => {
         // Refresh stats every 10 seconds
         const statsInterval = setInterval(async () => {
             try {
+                console.log('Refreshing visitor stats...');
                 const data = await visitorService.getStats();
+                console.log('Updated visitor stats:', data);
                 setStats(data);
             } catch (error) {
                 console.error('Error fetching stats:', error);
@@ -65,7 +71,7 @@ const VisitorCounter = ({ compact = false }) => {
                     </div>
                     <span className="text-xs">
                         <span className="font-semibold text-green-600 dark:text-green-400">
-                            {stats.onlineVisitors}
+                            {loading ? '...' : stats.onlineVisitors}
                         </span>
                         <span className="text-gray-500 dark:text-gray-500"> Online</span>
                     </span>
@@ -77,7 +83,7 @@ const VisitorCounter = ({ compact = false }) => {
                     <FiGlobe className="text-blue-600 dark:text-blue-400 text-xs" />
                     <span className="text-xs">
                         <span className="font-semibold text-blue-600 dark:text-blue-400">
-                            {stats.totalVisitors.toLocaleString()}
+                            {loading ? '...' : (stats.totalVisitors || 0).toLocaleString()}
                         </span>
                         <span className="text-gray-500 dark:text-gray-500"> Total</span>
                     </span>
