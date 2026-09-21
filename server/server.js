@@ -22,6 +22,7 @@ import productRoutes from './routes/productRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import itemCampaignRoutes from './routes/itemCampaignRoutes.js';
+import visitorRoutes from './routes/visitorRoutes.js';
 
 // Initialize express app
 const app = express();
@@ -66,6 +67,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/item-campaigns', itemCampaignRoutes);
+app.use('/api/visitors', visitorRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {

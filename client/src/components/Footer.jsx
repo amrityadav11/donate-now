@@ -1,11 +1,12 @@
-import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
     FiFacebook, FiTwitter, FiInstagram, FiLinkedin,
     FiHeart, FiMail, FiPhone, FiMapPin, FiGlobe
 } from 'react-icons/fi';
 import { homepageService } from '../services/homepageService';
 import { categoryService } from '../services/categoryService';
+import VisitorCounter from './VisitorCounter';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -154,6 +155,11 @@ const Footer = () => {
 
                 {/* Bottom Bar */}
                 <div className="border-t border-gray-800 mt-8 pt-8">
+                    {/* Visitor Counter */}
+                    <div className="mb-8 pb-6 border-b border-gray-800">
+                        <VisitorCounter compact={true} />
+                    </div>
+
                     <div className="flex flex-col items-center justify-center gap-4 mb-6 text-sm">
                         <div className="flex flex-wrap gap-6 justify-center">
                             <Link to="/privacy" className="hover:text-primary-400 transition-colors font-medium">

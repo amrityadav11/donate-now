@@ -9,6 +9,7 @@ import CampaignCard from '../components/CampaignCard';
 import ItemCampaignCard from '../components/ItemCampaignCard';
 import Loading from '../components/Loading';
 import SEO from '../components/SEO';
+import VisitorCounter from '../components/VisitorCounter';
 
 /* ── Hero Slider ─────────────────────────────────────────────────────────── */
 const HeroSlider = ({ slides, fallbackHero, fallbackBg }) => {
@@ -244,6 +245,13 @@ const HomePage = () => {
 
             {/* ── Marquee ───────────────────────────────────────────────── */}
             <Marquee />
+
+            {/* ── Visitor Counter ─────────────────────────────────────── */}
+            <section className="section-padding bg-gradient-to-r from-primary-50 to-orange-50 dark:from-primary-900/20 dark:to-orange-900/20 border-b border-primary-200 dark:border-primary-800">
+                <div className="section-container">
+                    <VisitorCounter />
+                </div>
+            </section>
 
             {/* ── Explore Causes ────────────────────────────────────────── */}
             <section className="section-padding bg-white dark:bg-gray-950">
